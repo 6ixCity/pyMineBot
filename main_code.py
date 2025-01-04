@@ -1,12 +1,10 @@
 from javascript import require, On, Once, AsyncTask, once, off
 from simple_chalk import chalk
 from random import randint
-from utils.vec3_conversion import vec3_to_str
 import PySimpleGUI as sg
 
 # Import the javascript libraries
 mineflayer = require("mineflayer")
-vec3 = require("vec3")
 
 # Global bot parameters
 reconnect = True
