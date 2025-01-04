@@ -13,6 +13,11 @@ A simple tool to easily create a bunch of Minecraft bots using Mineflayer and Py
 - Roll a dice
 - Auto reconnect
 
+## How to start the program
+
+- Install the requirements.txt
+- Run the code
+
 ## How to use
 
 1. Input a Name for the bot
