@@ -41,7 +41,6 @@ Example:
 
 - Better GUI
 - Fix bugs
-- Choose if you want auto reconnect
 - Look at player funktion
 - Walk to player funktion
 - Break selected blocks
