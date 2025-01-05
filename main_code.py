@@ -101,6 +101,7 @@ layout = [
             [sg.Text("Bot Name:", size =(15, 1)), sg.InputText(do_not_clear=False)],
             [sg.Text("Server Host:", size=(15,1)), sg.InputText(do_not_clear=False)],
             [sg.Text("Server Port:", size=(15,1)), sg.InputText(do_not_clear=False)],
+            [sg.Checkbox("Auto-Reconnect", default=True)],
             [sg.Output(size=(60, 20), font=('Helvetica 10'))],
             [sg.Button("Start"), sg.Button("Exit")],
     ]
@@ -113,6 +114,7 @@ while True:
     bot_name = values[0]
     server_host = values[1]
     server_port = values[2]
+    reconnect = values[3]
 
     if event == sg.WIN_CLOSED or event == 'Exit':
         break
