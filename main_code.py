@@ -1,12 +1,16 @@
 from javascript import require, On, Once, AsyncTask, once, off
 from simple_chalk import chalk
 from random import randint
+from utils.vec3_conversion import vec3_to_str
 import PySimpleGUI as sg
 
 # Import the javascript libraries
 mineflayer = require("mineflayer")
+vec3 = require("vec3")
 
 # Global bot parameters
+#server_host = "localhost"
+#server_port = 3000
 reconnect = True
 
 class MCBot:
@@ -60,24 +64,32 @@ class MCBot:
                 self.log((f"Kicked whilst trying to connect: {reason}"))
 
         # Chat event: Triggers on chat message
-        @On(self.bot, "messagestr")
-        def messagestr(this, message, messagePosition, jsonMsg, sender, verified=None):
-            if messagePosition == "chat":
-                if "quit" in message:
-                    self.bot.chat("Goodbye!")
-                    self.reconnect = False
-                    this.quit()
-                elif "coinflip" in message:
-                    if randint(1, 2) == 1:
-                        self.bot.chat("Heads!")
-                        self.log((f"Flipped a  coin!"))
-                    else:
-                        self.bot.chat("Tails!")
-                        self.log((f"Flipped a  coin!"))
-                elif "dice" in message:
-                    self.bot.chat(f"You rolled a {randint(1, 6)}")
-                    self.log((f"Rolled a dice!"))
-        # End event: Triggers on disconnect from server
+        @On(self.bot, 'chat')
+        def msgHandler(this, user, message, *args):
+            if "quit" in message:
+                self.bot.chat("Goodbye!")
+                self.reconnect = False
+                this.quit()
+            elif "coinflip" in message:
+                if randint(1, 2) == 1:
+                    self.bot.chat("Heads!")
+                    self.log((f"Flipped a  coin!"))
+                else:
+                    self.bot.chat("Tails!")
+                    self.log((f"Flipped a  coin!"))
+            elif "dice" in message:
+                self.bot.chat(f"You rolled a {randint(1, 6)}")
+                self.log((f"Rolled a dice!"))   
+            elif "break" in message:
+                block = self.bot.blockAtCursor()
+                if block:
+                    self.bot.dig(block)
+                    self.log(f"Breaking block!")
+                else:
+                    self.log(f"There is no block!")                
+            elif "look" in message:
+                player_position = self.bot.players[user].entity.position.offset(0, 1, 0)
+                self.bot.lookAt(player_position)
         @On(self.bot, "end")
         def end(this, reason):
             self.log((f"Disconnected: {reason}"))
@@ -86,7 +98,7 @@ class MCBot:
             off(self.bot, "login", login)
             off(self.bot, "spawn", spawn)
             off(self.bot, "kicked", kicked)
-            off(self.bot, "messagestr", messagestr)
+            off(self.bot, "msgHandler", msgHandler)
 
             # Reconnect
             if self.reconnect:
@@ -95,7 +107,9 @@ class MCBot:
 
             # Last event listener
             off(self.bot, "end", end)
-#PySimpleGUI 
+
+
+
 layout = [
             [sg.Text("Setup your Bot", size=(15,1))],
             [sg.Text("Bot Name:", size =(15, 1)), sg.InputText(do_not_clear=False)],
@@ -107,7 +121,7 @@ layout = [
     ]
 
 sg.theme("DarkGrey11")
-window = sg.Window("6ixCity's MineBot", layout, size=(800, 500))
+window = sg.Window("MineBot | Create a Bot", layout, size=(1080, 700))
 
 while True:
     event, values = window.read()
